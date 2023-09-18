@@ -7,18 +7,36 @@
         <item name="itemTextColor">@color/color_selector</item>
         <item name="itemRippleColor">@color/m3_navigation_bar_ripple_color_selector</item>
         <item name="android:background">@drawable/bottom_navigation_background</item>
-        <item name="itemActiveIndicatorStyle">@style/myBottomNavigationStyle.itemActiveIndicatorStyle</item>
-        <item name="itemTextAppearanceActive">@style/myBottomNavigationStyle.itemTextAppearanceActive</item>
+        <item name="itemActiveIndicatorStyle">
+            @style/myBottomNavigationStyle.itemActiveIndicatorStyle
+        </item>
+        <item name="itemTextAppearanceActive">
+            @style/myBottomNavigationStyle.itemTextAppearanceActive
+        </item>
 
     </style>
 
     <style name="myBottomNavigationStyle.itemActiveIndicatorStyle" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-     <item name="android:color">?color</item>
+        <item name="android:color">?color</item>
     </style>
 
     <style name="myBottomNavigationStyle.itemTextAppearanceActive" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-     <item name="fontFamily">@font/iransansweb_bold</item>
-     <item name="android:fontFamily">@font/iransansweb_bold</item>
+        <item name="fontFamily">@font/iransansweb_bold</item>
+        <item name="android:fontFamily">@font/iransansweb_bold</item>
+    </style>
+
+    <style name="chip" parent="ShapeAppearanceOverlay.Material3.Chip">
+        <item name="android:background">?colorPrimary</item>
+        <item name="rippleColor">?colorSecondary</item>
+        <item name="selectableItemBackground">?colorPrimary</item>
+        <item name="checkedChip">?colorPrimary</item>
+        <item name="android:checkable">true</item>
+        <item name="android:textColor">?colorOnPrimary</item>
+        <item name="android:textSize">16dp</item>
+        <item name="chipBackgroundColor">@color/lightBlue</item>
+        <item name="chipStrokeColor">@color/darkGray</item>
+        <item name="chipStrokeWidth">.5dp</item>
+
     </style>
 
 </resources>

@@ -2,9 +2,10 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     app:cardCornerRadius="15dp"
+    android:layout_gravity="center"
     app:strokeColor="@color/transparent"
     app:cardBackgroundColor="@color/originalBlack">
 
@@ -45,10 +46,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/iransansweb_light"
                 android:text="No Date"
-                android:clickable="true"
-                android:checkable="true"
-                android:textColor="@color/white"
-                android:textSize="16dp" />
+                style="@style/myChip" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/today"
@@ -57,11 +55,7 @@
                 android:layout_marginHorizontal="10dp"
                 android:fontFamily="@font/iransansweb_light"
                 android:text="Today"
-                android:clickable="true"
-                android:checkable="true"
-                android:checked="true"
-                android:textColor="@color/white"
-                android:textSize="16dp" />
+                style="@style/myChip" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/tomorrow"
@@ -69,10 +63,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/iransansweb_light"
                 android:text="Tomorrow"
-                android:clickable="true"
-                android:checkable="true"
-                android:textColor="@color/white"
-                android:textSize="16dp" />
+                style="@style/myChip" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/treeDaysLater"
@@ -80,10 +71,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/iransansweb_light"
                 android:text="3 Days Later"
-                android:clickable="true"
-                android:checkable="true"
-                android:textColor="@color/white"
-                android:textSize="16dp" />
+                style="@style/myChip" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/thisSunday"
@@ -92,10 +80,7 @@
                 android:layout_marginHorizontal="10dp"
                 android:fontFamily="@font/iransansweb_light"
                 android:text="This Sunday"
-                android:clickable="true"
-                android:checkable="true"
-                android:textColor="@color/white"
-                android:textSize="16dp" />
+                style="@style/myChip" />
         </com.google.android.material.chip.ChipGroup>
 
         <LinearLayout
@@ -134,7 +119,7 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginVertical="5dp"
                 android:fontFamily="@font/iransansweb_light"
-                android:text="18:00"
+                android:text="@string/no"
                 android:textColor="@color/darkGray"
                 android:textSize="15dp" />
 
@@ -176,7 +161,7 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginVertical="5dp"
                 android:fontFamily="@font/iransansweb_light"
-                android:text="17:55"
+                android:text="@string/no"
                 android:textColor="@color/darkGray"
                 android:textSize="15dp" />
 
