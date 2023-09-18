@@ -2,13 +2,14 @@ package com.meros.letscreate.Fragments.Calender;
 
 import static com.meros.letscreate.Constants.TACK_TB;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +17,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
-import android.widget.CalendarView;
-import android.widget.Toast;
+import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,9 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.chip.Chip;
 import com.meros.letscreate.Constants;
 import com.meros.letscreate.MainActivity;
-import com.meros.letscreate.MyDb;
 import com.meros.letscreate.R;
-import com.meros.letscreate.Utils;
 import com.meros.letscreate.Utils.LetFragment;
 import com.meros.letscreate.Utils.LetActivity;
 import com.meros.letscreate.databinding.FragmentCalenderBinding;
@@ -47,8 +45,8 @@ public class CalenderFragment extends LetFragment {
     private static final String TAG = "CalenderFragment";
     TackAdapter adapter;
     ArrayList<TackModel> tacks;
-    String date = "", tackDate = "";
-    Chip chip;
+    String date = "", tackDate = "No", tackTime = "No";
+    Chip dateChip, timeChip;
     TackModel tackModel = new TackModel();
     TackUrgency tackUrgency = TackUrgency.WHITE;
 
@@ -123,7 +121,8 @@ public class CalenderFragment extends LetFragment {
             dialog.dismiss();
         }));
         dialogBinding.schedule.setOnClickListener((view -> {
-            openCalendarDialog();
+            dialogBinding.getRoot().setVisibility(View.GONE);
+            openCalendarDialog(dialogBinding);
         }));
         dialogBinding.btnCancel.setOnClickListener((view -> {
             v.setVisibility(View.GONE);
@@ -214,7 +213,7 @@ public class CalenderFragment extends LetFragment {
         }
     }
 
-    public void openCalendarDialog() {
+    public void openCalendarDialog(NewTackDialogBinding newTackDialogBinding) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         ScheduleDialogBinding dialogBinding = ScheduleDialogBinding.inflate(LayoutInflater.from(getActivity()));
         builder.setView(dialogBinding.getRoot());
@@ -225,14 +224,17 @@ public class CalenderFragment extends LetFragment {
         dialog.setCancelable(false);
         dialogBinding.tvDone.setOnClickListener((view -> {
             Toast(getActivity(), "Hello");
+            newTackDialogBinding.getRoot().setVisibility(View.VISIBLE);
             dialog.dismiss();
         }));
         dialogBinding.tvCancel.setOnClickListener((view -> {
+            newTackDialogBinding.getRoot().setVisibility(View.VISIBLE);
             dialog.dismiss();
         }));
 
         dialogBinding.tvTimer.setOnClickListener((view -> {
-            openTimerDialog();
+            dialogBinding.getRoot().setVisibility(View.GONE);
+            openTimerDialog(dialogBinding);
         }));
 
         dialogBinding.calender.setOnDateChangeListener((calendarView, year, month, dayOfMonth) -> {
@@ -273,53 +275,53 @@ public class CalenderFragment extends LetFragment {
 
 
             if (TodayDay.equals(selectedDay)) {
-                if (chip != dialogBinding.today) {
-                    changeChip(chip, dialogBinding.today);
-                    chip = dialogBinding.today;
+                if (dateChip != dialogBinding.today) {
+                    changeChip(dateChip, dialogBinding.today);
+                    dateChip = dialogBinding.today;
                 }
                 Log.i(TAG, "today: ");
             } else if (selectedDay.equals(TomorrowDay)) {
-                if (chip != dialogBinding.tomorrow) {
-                    changeChip(chip, dialogBinding.tomorrow);
-                    chip = dialogBinding.tomorrow;
+                if (dateChip != dialogBinding.tomorrow) {
+                    changeChip(dateChip, dialogBinding.tomorrow);
+                    dateChip = dialogBinding.tomorrow;
                 }
                 Log.i(TAG, "tomorrow: ");
             } else if (selectedDay.equals(TreeDayLaterDay)) {
-                if (chip != dialogBinding.treeDaysLater) {
-                    changeChip(chip, dialogBinding.treeDaysLater);
-                    chip = dialogBinding.treeDaysLater;
+                if (dateChip != dialogBinding.treeDaysLater) {
+                    changeChip(dateChip, dialogBinding.treeDaysLater);
+                    dateChip = dialogBinding.treeDaysLater;
                 }
                 Log.i(TAG, "treeDaysLater: ");
             } else if (selectedDayOfWeek.equals("Sunday")) {
-                if (chip != dialogBinding.thisSunday) {
-                    changeChip(chip, dialogBinding.thisSunday);
-                    chip = dialogBinding.thisSunday;
+                if (dateChip != dialogBinding.thisSunday) {
+                    changeChip(dateChip, dialogBinding.thisSunday);
+                    dateChip = dialogBinding.thisSunday;
                 }
                 Log.i(TAG, "thisSunday: ");
             } else {
-                chip = dialogBinding.noDate;
-                changeChip(chip, dialogBinding.noDate);
+                dateChip = dialogBinding.noDate;
+                changeChip(dateChip, dialogBinding.noDate);
                 Log.i(TAG, "noDate: ");
             }
         });
 
 
-        chip = dialogBinding.today;
+        dateChip = dialogBinding.today;
         changeChip(dialogBinding.noDate, dialogBinding.today);
 
         dialogBinding.noDate.setOnClickListener((view -> {
-            if (chip != dialogBinding.today) {
-                changeChip(chip, dialogBinding.noDate);
-                chip = dialogBinding.noDate;
+            if (dateChip != dialogBinding.noDate) {
+                changeChip(dateChip, dialogBinding.noDate);
+                dateChip = dialogBinding.noDate;
                 tackDate = "";
                 dialogBinding.calenderDisable.setVisibility(View.VISIBLE);
             }
         }));
 
         dialogBinding.today.setOnClickListener((view -> {
-            if (chip != dialogBinding.today) {
-                changeChip(chip, dialogBinding.today);
-                chip = dialogBinding.today;
+            if (dateChip != dialogBinding.today) {
+                changeChip(dateChip, dialogBinding.today);
+                dateChip = dialogBinding.today;
                 Calendar calendar = Calendar.getInstance();
                 long dateMillis = calendar.getTimeInMillis();
                 Date date1 = new Date(dateMillis);
@@ -335,9 +337,9 @@ public class CalenderFragment extends LetFragment {
         }));
 
         dialogBinding.tomorrow.setOnClickListener((view -> {
-            if (chip != dialogBinding.tomorrow) {
-                changeChip(chip, dialogBinding.tomorrow);
-                chip = dialogBinding.tomorrow;
+            if (dateChip != dialogBinding.tomorrow) {
+                changeChip(dateChip, dialogBinding.tomorrow);
+                dateChip = dialogBinding.tomorrow;
 
                 Calendar calendar = Calendar.getInstance();
                 long dateMillis = calendar.getTimeInMillis();
@@ -356,9 +358,9 @@ public class CalenderFragment extends LetFragment {
         }));
 
         dialogBinding.treeDaysLater.setOnClickListener((view -> {
-            if (chip != dialogBinding.treeDaysLater) {
-                changeChip(chip, dialogBinding.treeDaysLater);
-                chip = dialogBinding.treeDaysLater;
+            if (dateChip != dialogBinding.treeDaysLater) {
+                changeChip(dateChip, dialogBinding.treeDaysLater);
+                dateChip = dialogBinding.treeDaysLater;
 
                 Calendar calendar = Calendar.getInstance();
                 long dateMillis = calendar.getTimeInMillis();
@@ -377,9 +379,9 @@ public class CalenderFragment extends LetFragment {
         }));
 
         dialogBinding.thisSunday.setOnClickListener((view -> {
-            if (chip != dialogBinding.thisSunday) {
-                changeChip(chip, dialogBinding.thisSunday);
-                chip = dialogBinding.thisSunday;
+            if (dateChip != dialogBinding.thisSunday) {
+                changeChip(dateChip, dialogBinding.thisSunday);
+                dateChip = dialogBinding.thisSunday;
 
                 Calendar calendar = Calendar.getInstance();
                 long dateMillis = calendar.getTimeInMillis();
@@ -404,11 +406,19 @@ public class CalenderFragment extends LetFragment {
     }
 
     public void changeChip(Chip oldChip, Chip newChip) {
+        if (newChip.getId() != oldChip.getId()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                newChip.setChipBackgroundColor(ColorStateList.valueOf(getActivity().getColor(R.color.blue)));
+            }
+        }
         newChip.setChecked(true);
         oldChip.setChecked(false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            oldChip.setChipBackgroundColor(ColorStateList.valueOf(getActivity().getColor(R.color.lightBlue)));
+        }
     }
 
-    public void openTimerDialog() {
+    public void openTimerDialog(ScheduleDialogBinding scheduleDialogBinding) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         PickTimerDialogBinding dialogBinding = PickTimerDialogBinding.inflate(LayoutInflater.from(getActivity()));
         builder.setView(dialogBinding.getRoot());
@@ -418,11 +428,189 @@ public class CalenderFragment extends LetFragment {
 
         dialog.setCancelable(false);
         dialogBinding.tvDone.setOnClickListener((view -> {
+            scheduleDialogBinding.getRoot().setVisibility(View.VISIBLE);
             Toast(getActivity(), "Hello");
             dialog.dismiss();
         }));
         dialogBinding.tvCancel.setOnClickListener((view -> {
+            scheduleDialogBinding.getRoot().setVisibility(View.VISIBLE);
             dialog.dismiss();
+        }));
+
+
+        dialogBinding.timePicker.setOnTimeChangedListener((timePicker, hour, min) -> {
+            tackTime = String.valueOf(hour) + ":" + String.valueOf(min);
+            dialogBinding.timerDisable.setVisibility(View.GONE);
+
+            Date currentTime = Calendar.getInstance().getTime();
+            Time SevenOClock = new Time();
+            SevenOClock.set(0, 0, 7, 0, 0, 0);
+            Time NineOClock = new Time();
+            NineOClock.set(0, 0, 9, 0, 0, 0);
+            Time TwelveOClock = new Time();
+            TwelveOClock.set(0, 0, 12, 0, 0, 0);
+            Time EighteenOClock = new Time();
+            EighteenOClock.set(0, 0, 18, 0, 0, 0);
+            Time TwentyThreeOClock = new Time();
+            TwentyThreeOClock.set(0, 0, 23, 0, 0, 0);
+
+
+            if (min == 0) {
+                if (hour == SevenOClock.hour) {
+                    if (timeChip != dialogBinding.seven) {
+                        changeChip(timeChip, dialogBinding.seven);
+                        timeChip = dialogBinding.seven;
+                    }
+                } 
+                else if (hour == NineOClock.hour) {
+                    if (timeChip != dialogBinding.nine) {
+                        changeChip(timeChip, dialogBinding.nine);
+                        timeChip = dialogBinding.nine;
+                    }
+                } 
+                else if (hour == TwelveOClock.hour) {
+                    if (timeChip != dialogBinding.twelve) {
+                        changeChip(timeChip, dialogBinding.twelve);
+                        timeChip = dialogBinding.twelve;
+                    }
+                } 
+                else if (hour == EighteenOClock.hour) {
+                    if (timeChip != dialogBinding.eghty) {
+                        changeChip(timeChip, dialogBinding.eghty);
+                        timeChip = dialogBinding.eghty;
+                    }
+                } 
+                else if (hour == TwentyThreeOClock.hour) {
+                    if (timeChip != dialogBinding.tventyTree) {
+                        changeChip(timeChip, dialogBinding.tventyTree);
+                        timeChip = dialogBinding.tventyTree;
+                    }
+                }
+                else if (hour == currentTime.getHours()) {
+                    if (timeChip != dialogBinding.now) {
+                        changeChip(timeChip, dialogBinding.now);
+                        timeChip = dialogBinding.now;
+                    }
+                }
+            }
+
+        });
+
+
+        timeChip = dialogBinding.now;
+        changeChip(dialogBinding.noTime, dialogBinding.now);
+
+        dialogBinding.noTime.setOnClickListener((view -> {
+            if (timeChip != dialogBinding.noTime) {
+                changeChip(timeChip, dialogBinding.noTime);
+                timeChip = dialogBinding.noTime;
+                tackTime = "No";
+                scheduleDialogBinding.tvTimerLength.setText(tackTime);
+                dialogBinding.timePicker.setVisibility(View.VISIBLE);
+            }
+        }));
+
+        dialogBinding.now.setOnClickListener((view -> {
+            if (timeChip != dialogBinding.now) {
+                changeChip(timeChip, dialogBinding.now);
+                timeChip = dialogBinding.now;
+                scheduleDialogBinding.tvTimerLength.setText(tackTime);
+                Date currentTime = Calendar.getInstance().getTime();
+
+
+                tackTime = String.valueOf(currentTime.getHours()) +":"+String.valueOf(currentTime.getMinutes());
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    dialogBinding.timePicker.setHour(currentTime.getHours());
+                    dialogBinding.timePicker.setMinute(currentTime.getMinutes());
+                }
+                dialogBinding.timerDisable.setVisibility(View.GONE);
+            }
+        }));
+        dialogBinding.seven.setOnClickListener((view -> {
+            if (timeChip != dialogBinding.seven) {
+                changeChip(timeChip, dialogBinding.seven);
+                timeChip = dialogBinding.seven;
+                scheduleDialogBinding.tvTimerLength.setText(tackTime);
+                Time SevenOClock = new Time();
+                SevenOClock.set(0, 0, 7, 0, 0, 0);
+
+                tackTime = String.valueOf(SevenOClock.hour) +":"+String.valueOf(SevenOClock.minute);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    dialogBinding.timePicker.setHour(SevenOClock.hour);
+                    dialogBinding.timePicker.setMinute(SevenOClock.minute);
+                }
+                dialogBinding.timerDisable.setVisibility(View.GONE);
+            }
+        }));
+        dialogBinding.nine.setOnClickListener((view -> {
+            if (timeChip != dialogBinding.nine) {
+                changeChip(timeChip, dialogBinding.nine);
+                timeChip = dialogBinding.nine;
+                scheduleDialogBinding.tvTimerLength.setText(tackTime);
+                Time NineOClock = new Time();
+                NineOClock.set(0, 0, 9, 0, 0, 0);
+
+                tackTime = String.valueOf(NineOClock.hour) +":"+String.valueOf(NineOClock.minute);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    dialogBinding.timePicker.setHour(NineOClock.hour);
+                    dialogBinding.timePicker.setMinute(NineOClock.minute);
+                }
+                dialogBinding.timerDisable.setVisibility(View.GONE);
+            }
+        }));
+        dialogBinding.twelve.setOnClickListener((view -> {
+            if (timeChip != dialogBinding.twelve) {
+                changeChip(timeChip, dialogBinding.twelve);
+                timeChip = dialogBinding.twelve;
+                scheduleDialogBinding.tvTimerLength.setText(tackTime);
+                Time TwelveOClock = new Time();
+                TwelveOClock.set(0, 0, 12, 0, 0, 0);
+
+                tackTime = String.valueOf(TwelveOClock.hour) +":"+String.valueOf(TwelveOClock.minute);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    dialogBinding.timePicker.setHour(TwelveOClock.hour);
+                    dialogBinding.timePicker.setMinute(TwelveOClock.minute);
+                }
+                dialogBinding.timerDisable.setVisibility(View.GONE);
+            }
+        }));
+        dialogBinding.eghty.setOnClickListener((view -> {
+            if (timeChip != dialogBinding.eghty) {
+                changeChip(timeChip, dialogBinding.eghty);
+                timeChip = dialogBinding.eghty;
+                scheduleDialogBinding.tvTimerLength.setText(tackTime);
+                Time EighteenOClock = new Time();
+                EighteenOClock.set(0, 0, 18, 0, 0, 0);
+
+                tackTime = String.valueOf(EighteenOClock.hour) +":"+String.valueOf(EighteenOClock.minute);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    dialogBinding.timePicker.setHour(EighteenOClock.hour);
+                    dialogBinding.timePicker.setMinute(EighteenOClock.minute);
+                }
+                dialogBinding.timerDisable.setVisibility(View.GONE);
+            }
+        }));
+        dialogBinding.tventyTree.setOnClickListener((view -> {
+            if (timeChip != dialogBinding.tventyTree) {
+                changeChip(timeChip, dialogBinding.tventyTree);
+                timeChip = dialogBinding.tventyTree;
+                scheduleDialogBinding.tvTimerLength.setText(tackTime);
+                Time TwentyThreeOClock = new Time();
+                TwentyThreeOClock.set(0, 0, 23, 0, 0, 0);
+
+                tackTime = String.valueOf(TwentyThreeOClock.hour) +":"+String.valueOf(TwentyThreeOClock.minute);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    dialogBinding.timePicker.setHour(TwentyThreeOClock.hour);
+                    dialogBinding.timePicker.setMinute(TwentyThreeOClock.minute);
+                }
+                dialogBinding.timerDisable.setVisibility(View.GONE);
+            }
         }));
 
     }
