@@ -440,6 +440,7 @@ public class CalenderFragment extends LetFragment {
 
         dialogBinding.timePicker.setOnTimeChangedListener((timePicker, hour, min) -> {
             tackTime = String.valueOf(hour) + ":" + String.valueOf(min);
+            scheduleDialogBinding.tvTimerLength.setText(tackTime);
             dialogBinding.timerDisable.setVisibility(View.GONE);
 
             Date currentTime = Calendar.getInstance().getTime();
