@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -428,19 +429,21 @@ public class CalenderFragment extends LetFragment {
 
         dialog.setCancelable(false);
         dialogBinding.tvDone.setOnClickListener((view -> {
+            scheduleDialogBinding.tvTimerLength.setText(tackTime);
             scheduleDialogBinding.getRoot().setVisibility(View.VISIBLE);
-            Toast(getActivity(), "Hello");
+            Log.i(TAG, "tackTime: " + tackTime);
             dialog.dismiss();
         }));
         dialogBinding.tvCancel.setOnClickListener((view -> {
+            tackTime = "No";
+            Toast(getActivity(), tackTime);
+            scheduleDialogBinding.tvTimerLength.setText(tackTime);
             scheduleDialogBinding.getRoot().setVisibility(View.VISIBLE);
             dialog.dismiss();
         }));
 
 
         dialogBinding.timePicker.setOnTimeChangedListener((timePicker, hour, min) -> {
-            tackTime = String.valueOf(hour) + ":" + String.valueOf(min);
-            scheduleDialogBinding.tvTimerLength.setText(tackTime);
             dialogBinding.timerDisable.setVisibility(View.GONE);
 
             Date currentTime = Calendar.getInstance().getTime();
@@ -456,58 +459,101 @@ public class CalenderFragment extends LetFragment {
             TwentyThreeOClock.set(0, 0, 23, 0, 0, 0);
 
 
-            if (min == 0) {
+//            if (min == 0) {
                 if (hour == SevenOClock.hour) {
                     if (timeChip != dialogBinding.seven) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            dialogBinding.timePicker.setMinute(0);
+                        }
                         changeChip(timeChip, dialogBinding.seven);
                         timeChip = dialogBinding.seven;
+                        tackTime = "07:00";
+                        scheduleDialogBinding.tvTimerLength.setText(tackTime);
                     }
-                } 
+                    return;
+                }
                 else if (hour == NineOClock.hour) {
                     if (timeChip != dialogBinding.nine) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            dialogBinding.timePicker.setMinute(0);
+                        }
                         changeChip(timeChip, dialogBinding.nine);
                         timeChip = dialogBinding.nine;
+                        tackTime = "09:00";
+                        scheduleDialogBinding.tvTimerLength.setText(tackTime);
                     }
-                } 
+                    return;
+                }
                 else if (hour == TwelveOClock.hour) {
                     if (timeChip != dialogBinding.twelve) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            dialogBinding.timePicker.setMinute(0);
+                        }
                         changeChip(timeChip, dialogBinding.twelve);
                         timeChip = dialogBinding.twelve;
+                        tackTime = "12:00";
+                        scheduleDialogBinding.tvTimerLength.setText(tackTime);
                     }
-                } 
+                    return;
+                }
                 else if (hour == EighteenOClock.hour) {
                     if (timeChip != dialogBinding.eghty) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            dialogBinding.timePicker.setMinute(0);
+                        }
                         changeChip(timeChip, dialogBinding.eghty);
                         timeChip = dialogBinding.eghty;
+                        tackTime = "18:00";
+                        scheduleDialogBinding.tvTimerLength.setText(tackTime);
                     }
-                } 
+                    return;
+                }
                 else if (hour == TwentyThreeOClock.hour) {
                     if (timeChip != dialogBinding.tventyTree) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            dialogBinding.timePicker.setMinute(0);
+                        }
                         changeChip(timeChip, dialogBinding.tventyTree);
                         timeChip = dialogBinding.tventyTree;
+                        tackTime = "23:00";
+                        scheduleDialogBinding.tvTimerLength.setText(tackTime);
                     }
+                    return;
                 }
                 else if (hour == currentTime.getHours()) {
                     if (timeChip != dialogBinding.now) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            dialogBinding.timePicker.setMinute(0);
+                        }
                         changeChip(timeChip, dialogBinding.now);
                         timeChip = dialogBinding.now;
+                        tackTime = String.valueOf(currentTime.getHours()) + ":" + String.valueOf(currentTime.getMinutes());
+                        scheduleDialogBinding.tvTimerLength.setText(tackTime);
                     }
+                    return;
                 }
-            }
+//            }
+            Log.i(TAG, "openTimerDialog: "+min);
+            tackTime = String.valueOf(hour) + ":" + String.valueOf(min);
+            scheduleDialogBinding.tvTimerLength.setText(tackTime);
 
         });
 
 
         timeChip = dialogBinding.now;
         changeChip(dialogBinding.noTime, dialogBinding.now);
+        Date currentTime = Calendar.getInstance().getTime();
+
+
+        tackTime = String.valueOf(currentTime.getHours()) + ":" + String.valueOf(currentTime.getMinutes());
+
 
         dialogBinding.noTime.setOnClickListener((view -> {
             if (timeChip != dialogBinding.noTime) {
                 changeChip(timeChip, dialogBinding.noTime);
                 timeChip = dialogBinding.noTime;
                 tackTime = "No";
-                scheduleDialogBinding.tvTimerLength.setText(tackTime);
-                dialogBinding.timePicker.setVisibility(View.VISIBLE);
+                dialogBinding.timerDisable.setVisibility(View.VISIBLE);
             }
         }));
 
@@ -515,11 +561,10 @@ public class CalenderFragment extends LetFragment {
             if (timeChip != dialogBinding.now) {
                 changeChip(timeChip, dialogBinding.now);
                 timeChip = dialogBinding.now;
-                scheduleDialogBinding.tvTimerLength.setText(tackTime);
-                Date currentTime = Calendar.getInstance().getTime();
+                Date currentTime2 = Calendar.getInstance().getTime();
 
 
-                tackTime = String.valueOf(currentTime.getHours()) +":"+String.valueOf(currentTime.getMinutes());
+                tackTime = String.valueOf(currentTime2.getHours()) + ":" + String.valueOf(currentTime2.getMinutes());
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     dialogBinding.timePicker.setHour(currentTime.getHours());
@@ -532,15 +577,14 @@ public class CalenderFragment extends LetFragment {
             if (timeChip != dialogBinding.seven) {
                 changeChip(timeChip, dialogBinding.seven);
                 timeChip = dialogBinding.seven;
-                scheduleDialogBinding.tvTimerLength.setText(tackTime);
                 Time SevenOClock = new Time();
                 SevenOClock.set(0, 0, 7, 0, 0, 0);
 
-                tackTime = "0"+String.valueOf(SevenOClock.hour) +":"+String.valueOf(SevenOClock.minute)+"0";
+                tackTime = "07:00";
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     dialogBinding.timePicker.setHour(SevenOClock.hour);
-                    dialogBinding.timePicker.setMinute(SevenOClock.minute);
+                    dialogBinding.timePicker.setMinute(0);
                 }
                 dialogBinding.timerDisable.setVisibility(View.GONE);
             }
@@ -549,15 +593,14 @@ public class CalenderFragment extends LetFragment {
             if (timeChip != dialogBinding.nine) {
                 changeChip(timeChip, dialogBinding.nine);
                 timeChip = dialogBinding.nine;
-                scheduleDialogBinding.tvTimerLength.setText(tackTime);
                 Time NineOClock = new Time();
                 NineOClock.set(0, 0, 9, 0, 0, 0);
 
-                tackTime = "0"+String.valueOf(NineOClock.hour) +":"+String.valueOf(NineOClock.minute)+"0";
+                tackTime = "09:00";
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     dialogBinding.timePicker.setHour(NineOClock.hour);
-                    dialogBinding.timePicker.setMinute(NineOClock.minute);
+                    dialogBinding.timePicker.setMinute(0);
                 }
                 dialogBinding.timerDisable.setVisibility(View.GONE);
             }
@@ -566,15 +609,14 @@ public class CalenderFragment extends LetFragment {
             if (timeChip != dialogBinding.twelve) {
                 changeChip(timeChip, dialogBinding.twelve);
                 timeChip = dialogBinding.twelve;
-                scheduleDialogBinding.tvTimerLength.setText(tackTime);
                 Time TwelveOClock = new Time();
                 TwelveOClock.set(0, 0, 12, 0, 0, 0);
 
-                tackTime = String.valueOf(TwelveOClock.hour) +":"+String.valueOf(TwelveOClock.minute)+"0";
+                tackTime = "12:00";
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     dialogBinding.timePicker.setHour(TwelveOClock.hour);
-                    dialogBinding.timePicker.setMinute(TwelveOClock.minute);
+                    dialogBinding.timePicker.setMinute(0);
                 }
                 dialogBinding.timerDisable.setVisibility(View.GONE);
             }
@@ -583,15 +625,14 @@ public class CalenderFragment extends LetFragment {
             if (timeChip != dialogBinding.eghty) {
                 changeChip(timeChip, dialogBinding.eghty);
                 timeChip = dialogBinding.eghty;
-                scheduleDialogBinding.tvTimerLength.setText(tackTime);
                 Time EighteenOClock = new Time();
                 EighteenOClock.set(0, 0, 18, 0, 0, 0);
 
-                tackTime = String.valueOf(EighteenOClock.hour) +":"+String.valueOf(EighteenOClock.minute)+"0";
+                tackTime = "18:00";
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     dialogBinding.timePicker.setHour(EighteenOClock.hour);
-                    dialogBinding.timePicker.setMinute(EighteenOClock.minute);
+                    dialogBinding.timePicker.setMinute(0);
                 }
                 dialogBinding.timerDisable.setVisibility(View.GONE);
             }
@@ -600,15 +641,14 @@ public class CalenderFragment extends LetFragment {
             if (timeChip != dialogBinding.tventyTree) {
                 changeChip(timeChip, dialogBinding.tventyTree);
                 timeChip = dialogBinding.tventyTree;
-                scheduleDialogBinding.tvTimerLength.setText(tackTime);
                 Time TwentyThreeOClock = new Time();
                 TwentyThreeOClock.set(0, 0, 23, 0, 0, 0);
 
-                tackTime = String.valueOf(TwentyThreeOClock.hour) +":"+String.valueOf(TwentyThreeOClock.minute)+"0";
+                tackTime = "23:00";
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     dialogBinding.timePicker.setHour(TwentyThreeOClock.hour);
-                    dialogBinding.timePicker.setMinute(TwentyThreeOClock.minute);
+                    dialogBinding.timePicker.setMinute(0);
                 }
                 dialogBinding.timerDisable.setVisibility(View.GONE);
             }
