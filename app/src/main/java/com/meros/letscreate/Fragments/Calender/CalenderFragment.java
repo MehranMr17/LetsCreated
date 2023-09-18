@@ -536,7 +536,7 @@ public class CalenderFragment extends LetFragment {
                 Time SevenOClock = new Time();
                 SevenOClock.set(0, 0, 7, 0, 0, 0);
 
-                tackTime = String.valueOf(SevenOClock.hour) +":"+String.valueOf(SevenOClock.minute);
+                tackTime = "0"+String.valueOf(SevenOClock.hour) +":"+String.valueOf(SevenOClock.minute)+"0";
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     dialogBinding.timePicker.setHour(SevenOClock.hour);
@@ -553,7 +553,7 @@ public class CalenderFragment extends LetFragment {
                 Time NineOClock = new Time();
                 NineOClock.set(0, 0, 9, 0, 0, 0);
 
-                tackTime = String.valueOf(NineOClock.hour) +":"+String.valueOf(NineOClock.minute);
+                tackTime = "0"+String.valueOf(NineOClock.hour) +":"+String.valueOf(NineOClock.minute)+"0";
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     dialogBinding.timePicker.setHour(NineOClock.hour);
@@ -570,7 +570,7 @@ public class CalenderFragment extends LetFragment {
                 Time TwelveOClock = new Time();
                 TwelveOClock.set(0, 0, 12, 0, 0, 0);
 
-                tackTime = String.valueOf(TwelveOClock.hour) +":"+String.valueOf(TwelveOClock.minute);
+                tackTime = String.valueOf(TwelveOClock.hour) +":"+String.valueOf(TwelveOClock.minute)+"0";
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     dialogBinding.timePicker.setHour(TwelveOClock.hour);
@@ -587,7 +587,7 @@ public class CalenderFragment extends LetFragment {
                 Time EighteenOClock = new Time();
                 EighteenOClock.set(0, 0, 18, 0, 0, 0);
 
-                tackTime = String.valueOf(EighteenOClock.hour) +":"+String.valueOf(EighteenOClock.minute);
+                tackTime = String.valueOf(EighteenOClock.hour) +":"+String.valueOf(EighteenOClock.minute)+"0";
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     dialogBinding.timePicker.setHour(EighteenOClock.hour);
@@ -604,7 +604,7 @@ public class CalenderFragment extends LetFragment {
                 Time TwentyThreeOClock = new Time();
                 TwentyThreeOClock.set(0, 0, 23, 0, 0, 0);
 
-                tackTime = String.valueOf(TwentyThreeOClock.hour) +":"+String.valueOf(TwentyThreeOClock.minute);
+                tackTime = String.valueOf(TwentyThreeOClock.hour) +":"+String.valueOf(TwentyThreeOClock.minute)+"0";
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     dialogBinding.timePicker.setHour(TwentyThreeOClock.hour);
