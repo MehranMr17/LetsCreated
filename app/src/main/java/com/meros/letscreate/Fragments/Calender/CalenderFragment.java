@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.TimePicker;
@@ -23,7 +24,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
 import com.meros.letscreate.Constants;
@@ -82,6 +85,8 @@ public class CalenderFragment extends LetFragment {
         adapter = new TackAdapter(tacks);
         binding.recTacks.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recTacks.setAdapter(adapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(binding.recTacks);
 
         binding.btnAddTack.setOnClickListener((view -> {
             openCreateTackDialog();
@@ -100,6 +105,10 @@ public class CalenderFragment extends LetFragment {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
+        AlphaAnimation alphaAnimation1 = new AlphaAnimation(0.0f,1.0f);
+        alphaAnimation1.setFillAfter(true);
+        alphaAnimation1.setDuration(500);
+        dialogBinding.getRoot().startAnimation(alphaAnimation1);
 
         LetActivity activity = ((MainActivity) getActivity());
         ConstraintLayout v = activity.showBackgroundView(true);
@@ -122,7 +131,10 @@ public class CalenderFragment extends LetFragment {
             dialog.dismiss();
         }));
         dialogBinding.schedule.setOnClickListener((view -> {
-            dialogBinding.getRoot().setVisibility(View.GONE);
+            AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f,0.0f);
+            alphaAnimation.setFillAfter(true);
+            alphaAnimation.setDuration(700);
+            dialogBinding.getRoot().startAnimation(alphaAnimation);
             openCalendarDialog(dialogBinding);
         }));
         dialogBinding.btnCancel.setOnClickListener((view -> {
@@ -132,7 +144,7 @@ public class CalenderFragment extends LetFragment {
 
         ScaleAnimation scaleAnimation1 = new ScaleAnimation(1, 1.5f, 1, 1.5f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         scaleAnimation1.setFillAfter(true);
-        scaleAnimation1.setDuration(700);
+        scaleAnimation1.setDuration(500);
         dialogBinding.white.startAnimation(scaleAnimation1);
 
 
@@ -141,7 +153,7 @@ public class CalenderFragment extends LetFragment {
                 changeUrgency(dialogBinding, tackUrgency);
                 ScaleAnimation scaleAnimation = new ScaleAnimation(1, 1.5f, 1, 1.5f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                 scaleAnimation.setFillAfter(true);
-                scaleAnimation.setDuration(700);
+                scaleAnimation.setDuration(500);
                 dialogBinding.white.startAnimation(scaleAnimation);
                 tackUrgency = TackUrgency.WHITE;
             }
@@ -153,7 +165,7 @@ public class CalenderFragment extends LetFragment {
                 changeUrgency(dialogBinding, tackUrgency);
                 ScaleAnimation scaleAnimation = new ScaleAnimation(1, 1.5f, 1, 1.5f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                 scaleAnimation.setFillAfter(true);
-                scaleAnimation.setDuration(700);
+                scaleAnimation.setDuration(500);
                 dialogBinding.yellow.startAnimation(scaleAnimation);
                 tackUrgency = TackUrgency.YELLOW;
             }
@@ -165,7 +177,7 @@ public class CalenderFragment extends LetFragment {
                 changeUrgency(dialogBinding, tackUrgency);
                 ScaleAnimation scaleAnimation = new ScaleAnimation(1, 1.5f, 1, 1.5f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                 scaleAnimation.setFillAfter(true);
-                scaleAnimation.setDuration(700);
+                scaleAnimation.setDuration(500);
                 dialogBinding.green.startAnimation(scaleAnimation);
                 tackUrgency = TackUrgency.GREEN;
             }
@@ -176,7 +188,7 @@ public class CalenderFragment extends LetFragment {
                 changeUrgency(dialogBinding, tackUrgency);
                 ScaleAnimation scaleAnimation = new ScaleAnimation(1, 1.5f, 1, 1.5f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                 scaleAnimation.setFillAfter(true);
-                scaleAnimation.setDuration(700);
+                scaleAnimation.setDuration(500);
                 dialogBinding.orange.startAnimation(scaleAnimation);
                 tackUrgency = TackUrgency.ORANGE;
             }
@@ -188,7 +200,7 @@ public class CalenderFragment extends LetFragment {
                 changeUrgency(dialogBinding, tackUrgency);
                 ScaleAnimation scaleAnimation = new ScaleAnimation(1, 1.5f, 1, 1.5f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                 scaleAnimation.setFillAfter(true);
-                scaleAnimation.setDuration(700);
+                scaleAnimation.setDuration(500);
                 dialogBinding.red.startAnimation(scaleAnimation);
                 tackUrgency = TackUrgency.RED;
             }
@@ -200,7 +212,7 @@ public class CalenderFragment extends LetFragment {
     public void changeUrgency(NewTackDialogBinding dialogBinding, TackUrgency tackUrgency) {
         ScaleAnimation onscaleAnimation = new ScaleAnimation(1.5f, 1, 1.5f, 1, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         onscaleAnimation.setFillAfter(true);
-        onscaleAnimation.setDuration(700);
+        onscaleAnimation.setDuration(500);
         if (tackUrgency == TackUrgency.WHITE) {
             dialogBinding.white.startAnimation(onscaleAnimation);
         } else if (tackUrgency == TackUrgency.YELLOW) {
@@ -222,25 +234,42 @@ public class CalenderFragment extends LetFragment {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
+        AlphaAnimation alphaAnimation1 = new AlphaAnimation(0.0f,1.0f);
+        alphaAnimation1.setFillAfter(true);
+        alphaAnimation1.setDuration(500);
+        dialogBinding.getRoot().startAnimation(alphaAnimation1);
+
+
         dialog.setCancelable(false);
         dialogBinding.tvDone.setOnClickListener((view -> {
             Toast(getActivity(), "Hello");
-            newTackDialogBinding.getRoot().setVisibility(View.VISIBLE);
+            AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f,1.0f);
+            alphaAnimation.setFillAfter(true);
+            alphaAnimation.setDuration(500);
+            newTackDialogBinding.getRoot().startAnimation(alphaAnimation);
             dialog.dismiss();
         }));
         dialogBinding.tvCancel.setOnClickListener((view -> {
-            newTackDialogBinding.getRoot().setVisibility(View.VISIBLE);
+            AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f,1.0f);
+            alphaAnimation.setFillAfter(true);
+            alphaAnimation.setDuration(500);
+            newTackDialogBinding.getRoot().startAnimation(alphaAnimation);
             dialog.dismiss();
         }));
 
         dialogBinding.tvTimer.setOnClickListener((view -> {
-            dialogBinding.getRoot().setVisibility(View.GONE);
+            AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f,0.0f);
+            alphaAnimation.setFillAfter(true);
+            alphaAnimation.setDuration(700);
+            dialogBinding.getRoot().startAnimation(alphaAnimation);
             openTimerDialog(dialogBinding);
         }));
 
         dialogBinding.calender.setOnDateChangeListener((calendarView, year, month, dayOfMonth) -> {
             tackDate = String.valueOf(year) + String.valueOf(month + 1) + String.valueOf(dayOfMonth);
             dialogBinding.calenderDisable.setVisibility(View.GONE);
+
+            changeChip(dialogBinding.today, dialogBinding.today);
 
             Calendar TodayCalendar = Calendar.getInstance();
             Calendar SelectedCalendar = Calendar.getInstance();
@@ -427,10 +456,19 @@ public class CalenderFragment extends LetFragment {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
+        AlphaAnimation alphaAnimation1 = new AlphaAnimation(0.0f,1.0f);
+        alphaAnimation1.setFillAfter(true);
+        alphaAnimation1.setDuration(500);
+        dialogBinding.getRoot().startAnimation(alphaAnimation1);
+
+
         dialog.setCancelable(false);
         dialogBinding.tvDone.setOnClickListener((view -> {
             scheduleDialogBinding.tvTimerLength.setText(tackTime);
-            scheduleDialogBinding.getRoot().setVisibility(View.VISIBLE);
+            AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f,1.0f);
+            alphaAnimation.setFillAfter(true);
+            alphaAnimation.setDuration(500);
+            scheduleDialogBinding.getRoot().startAnimation(alphaAnimation);
             Log.i(TAG, "tackTime: " + tackTime);
             dialog.dismiss();
         }));
@@ -438,13 +476,17 @@ public class CalenderFragment extends LetFragment {
             tackTime = "No";
             Toast(getActivity(), tackTime);
             scheduleDialogBinding.tvTimerLength.setText(tackTime);
-            scheduleDialogBinding.getRoot().setVisibility(View.VISIBLE);
+            AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f,1.0f);
+            alphaAnimation.setFillAfter(true);
+            alphaAnimation.setDuration(500);
+            scheduleDialogBinding.getRoot().startAnimation(alphaAnimation);
             dialog.dismiss();
         }));
 
 
         dialogBinding.timePicker.setOnTimeChangedListener((timePicker, hour, min) -> {
             dialogBinding.timerDisable.setVisibility(View.GONE);
+            changeChip(dialogBinding.seven, dialogBinding.seven);
 
             Date currentTime = Calendar.getInstance().getTime();
             Time SevenOClock = new Time();
@@ -655,4 +697,16 @@ public class CalenderFragment extends LetFragment {
         }));
 
     }
+
+    ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN, ItemTouchHelper.START) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            adapter.notifyItemChanged(viewHolder.getPosition());
+        }
+    };
 }
